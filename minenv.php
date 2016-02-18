@@ -2,15 +2,17 @@
 /**
  * Minenv by Paweł Abramowicz
  * Based on PHP Dotenv by Vance Lucas
- * to use, just include and loadenv();
+ * to use, just include and loadenv(__DIR__);
  */
 
-function loadenv($file = '.env', $opts = array()) {
-    # get the filename
-    if (!is_string($file)) $file = '.env';
+function loadenv($path, $file = '.env', $opts = array()) {
+    # get the path
+    if (!is_string($file))
+        $file = '.env';
+    $path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
 
     # if file's readable
-    if (is_file($file) && is_readable($file)) {
+    if (is_file($path) && is_readable($path)) {
 
         # set mutability
         $immutable = isset($opts['immutable']) ? $opts['immutable'] : in_array('immutable', (array)$opts);
@@ -18,7 +20,7 @@ function loadenv($file = '.env', $opts = array()) {
         # get lines with line endings autodetection
         $autodetect = ini_get('auto_detect_line_endings');
         ini_set('auto_detect_line_endings', '1');
-        $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         ini_set('auto_detect_line_endings', $autodetect);
 
         # process lines; set values accordingly
