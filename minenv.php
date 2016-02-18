@@ -15,7 +15,7 @@ function loadenv($path, $file = '.env', $opts = array()) {
     if (is_file($path) && is_readable($path)) {
 
         # set mutability
-        $immutable = isset($opts['immutable']) ? $opts['immutable'] : in_array('immutable', (array)$opts);
+        $mutable = isset($opts['mutable']) ? $opts['mutable'] : in_array('mutable', (array)$opts);
 
         # get lines with line endings autodetection
         $autodetect = ini_get('auto_detect_line_endings');
@@ -71,7 +71,7 @@ function loadenv($path, $file = '.env', $opts = array()) {
                 #TODO: resolve nested vars
 
                 # Don't overwrite existing environment variables if we're immutable
-                if ($immutable && (array_key_exists($name, $_ENV) || array_key_exists($name, $_SERVER) || getenv($name))) {
+                if (!$mutable && (array_key_exists($name, $_ENV) || array_key_exists($name, $_SERVER) || getenv($name))) {
                     continue;
                 }
 
