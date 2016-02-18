@@ -1,4 +1,9 @@
 <?php
+/**
+ * Minenv by Paweł Abramowicz
+ * Based on PHP Dotenv by Vance Lucas
+ * to use, just include and loadenv();
+ */
 
 function loadenv($file = '.env', $opts = array()) {
     # get the filename
