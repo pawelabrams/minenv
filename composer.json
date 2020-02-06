@@ -1,0 +1,20 @@
+{
+    "name": "pawelabrams/minenv",
+    "description": "Makes environment variables from .env files accessible to PHP. A lightweight alternative to phpdotenv.",
+    "keywords": ["env", "dotenv", "environment"],
+    "homepage": "https://github.com/pawelabrams/minenv",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Paweł Abramowicz.org",
+            "email": "pawelabrams@gmail.com",
+            "homepage": "http://abramowicz.org"
+        }
+    ],
+    "require": {
+        "php": "^5.6 || ^7.0"
+    },
+    "autoload": {
+        "files": ["minenv.php"]
+    }
+}
