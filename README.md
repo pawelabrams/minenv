@@ -25,12 +25,20 @@ To use the variables, require the `minenv.php` and `loadenv()`.
 require 'minenv.php';
 loadenv(__DIR__);
 ```
+
+You can use composer, too! Just add `pawelabrams/minenv` to your project requirements.
+```php
+<?php
+require 'vendor/autoload.php';
+loadenv(__DIR__);
+```
+
 The arguments are:
 1. the path in where to look for `.env` (required),
 2. the name of the file if other than `.env`,
 3. options array.
 
-Currently, the only option to set is mutability: both `array('mutable' => true)` and `array('mutable')` (or just `['mutable']`, if you're using PHP 5.4+ as you should be) set the precedence of the `.env` variables higher than those which were already set.
+Currently, the only option to set is mutability: both `['mutable' => true]` and `['mutable']` set the precedence of the `.env` variables higher than those which were already set.
 
 ## More tricks
 
