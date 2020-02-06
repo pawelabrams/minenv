@@ -3,12 +3,18 @@
  * Minenv by Paweł Abramowicz
  * Based on PHP Dotenv by Vance Lucas
  * to use, just include and loadenv(__DIR__);
+ *
+ * @param string $path
+ * @param string $file
+ * @param array $opts
+ *
+ * @throws Exception
  */
-
-function loadenv($path, $file = '.env', $opts = array()) {
+function loadenv($path, $file = '.env', $opts = []) {
     # get the path
-    if (!is_string($file))
+    if (!is_string($file)) {
         $file = '.env';
+    }
     $path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
 
     # if file's readable
@@ -17,26 +23,30 @@ function loadenv($path, $file = '.env', $opts = array()) {
         # set mutability
         $mutable = isset($opts['mutable']) ? $opts['mutable'] : in_array('mutable', (array)$opts);
 
-        # get lines with line endings autodetection
-        $autodetect = ini_get('auto_detect_line_endings');
+        # get lines with line endings auto-detection
+        $oldvalue = ini_get('auto_detect_line_endings');
         ini_set('auto_detect_line_endings', '1');
+
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        ini_set('auto_detect_line_endings', $autodetect);
+
+        ini_set('auto_detect_line_endings', $oldvalue);
 
         # process lines; set values accordingly
         foreach ($lines as $line) {
             # if it looks like a setter
-            if (strpos(trim($line), '#') !== 0 && strpos($line, '=') !== false) {
-                if (strpos($line, '=') !== false)
+            if (strpos(trim($line), '#') !== 0) {
+                $name = $line;
+                $value = null;
+
+                if (strpos($line, '=') !== false) {
                     list($name, $value) = explode('=', $line, 2);
-                else
-                    $name = $line;
+                }
 
                 # sanitize name
                 $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
 
                 # sanitize value
-                $value = trim($value);
+                $value = isset($value) ? trim($value) : null;
                 if ($value && strpbrk($value[0], '"\'') !== false) { # value starts with a quote
                     $quote = $value[0];
                     # regex copied verbatim from vlucas/phpdotenv
@@ -59,7 +69,7 @@ function loadenv($path, $file = '.env', $opts = array()) {
                     $value = str_replace("\\$quote", $quote, $value);
                     $value = str_replace('\\\\', '\\', $value);
                 } elseif ($value) {
-                    $parts = explode(' #', $value, 2); #TODO: tab before # breaks this, think of a workaround!
+                    $parts = explode(' #', str_replace("\t#", ' #', $value), 2);
                     $value = rtrim($parts[0]);
 
                     # Unquoted values cannot contain whitespace
